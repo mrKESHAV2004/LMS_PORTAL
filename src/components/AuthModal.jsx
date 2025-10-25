@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { memo } from "react";
 import { assets } from "../assets/assets";
+import {FaGoogle} from 'react-icons/fa'
 
 const AuthModal = memo(({ isOpen, onClose, onAuthSuccess }) => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -151,7 +152,7 @@ const AuthModal = memo(({ isOpen, onClose, onAuthSuccess }) => {
           disabled={loading}
           className="w-full bg-white border border-gray-300 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-50 flex items-center justify-center gap-2 disabled:opacity-50"
         >
-          <img src={assets.google_icon || '🔍'} alt="Google" className="w-5 h-5" />
+          <FaGoogle className="w-5 h-5"/>
           {loading ? 'Loading...' : 'Continue with Google'}
         </button>
 

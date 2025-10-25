@@ -45,7 +45,7 @@ const MyEnrollments = () => {
                 </td>
                 <td className='md:px-4 py-3 max-sm:hidden'>{calculateCourseTime(course)}</td>
                 <td className='md:px-4 py-3 max-sm:hidden'>{progressArray[enrolledCourses.indexOf(course)] && `${progressArray[enrolledCourses.indexOf(course)].lectureCompleted}/${progressArray[enrolledCourses.indexOf(course)].totalLectures}`} lectures</td>
-                <td className='md:px-4 py-3 max-sm:text-right'> 
+                <td className='md:px-4 py-3 px-2 max-sm:text-right'> 
                   <button className='px-3 sm:px-5 py-1.5 sm:py-2 bg-blue-600 text-white rounded-md max-sm:text-sm cursor-pointer' onClick={()=>navigate(`/player/${course._id}`)}>
                     {progressArray[enrolledCourses.indexOf(course)] && progressArray[enrolledCourses.indexOf(course)].lectureCompleted === progressArray[enrolledCourses.indexOf(course)].totalLectures ? 'Completed' :'On going'}
                   </button>

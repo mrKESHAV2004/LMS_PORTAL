@@ -22,7 +22,7 @@ const StudentEnrolled = () => {
                   <th className='px-4 py-3 font-semibold text-center hidden sm:table-cell'>#</th>
                   <th className='px-4 py-3 font-semibold'>Student Name</th>
                   <th className='px-4 py-3 font-semibold'>Course Title</th>
-                  <th className='px-4 py-3 font-semibold'>Date</th>
+                  <th className='px-4 py-3 font-semibold hidden md:table-cell'>Date</th>
                 </tr>
               </thead>
               <tbody className='text-gray-500 text-sm'>
@@ -34,7 +34,7 @@ const StudentEnrolled = () => {
                       <span className='truncate'>{item.student.name}</span>
                     </td>
                     <td className='px-4 py-3'>{item.courseTitle}</td>
-                    <td className='px-4 py-3'>{new Date(item.purchaseDate).toLocaleDateString()}</td>
+                    <td className='px-4 py-3 hidden md:table-cell'>{new Date(item.purchaseDate).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>

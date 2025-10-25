@@ -21,7 +21,7 @@ const MyCourse = () => {
                 <tr>
                   <th className='px-4 py-3 font-semibold truncate'>All Courses</th>
                   <th className='px-4 py-3 font-semibold truncate'>Earnings</th>
-                  <th className='px-4 py-3 font-semibold truncate'>Students</th>
+                  <th className='px-4 py-3 font-semibold truncate hidden md:table-cell'>Students</th>
                   <th className='px-4 py-3 font-semibold truncate'>Published on</th>
                 </tr>
               </thead>
@@ -33,7 +33,7 @@ const MyCourse = () => {
                       <span className='truncate hidden md:block'>{course.courseTitle}</span>
                     </td>
                     <td className='px-4 py-3'>{currency} {(course.enrolledStudents.length * (course.coursePrice - course.discount * course.coursePrice / 100)).toFixed(2)}</td>
-                    <td className='px-4 py-3'>{course.enrolledStudents.length || 0}</td>
+                    <td className='px-4 py-3 hidden md:table-cell'>{course.enrolledStudents.length || 0}</td>
                     <td className='px-4 py-3'>{new Date(course.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}

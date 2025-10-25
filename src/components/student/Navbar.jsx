@@ -82,8 +82,11 @@ const Navbar = () => {
               </>
             }
             {user ? (
-              <button onClick={handleLogout}>
-                <img src={assets.logout_icon || '🚪'} alt="Logout" />
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 text-white px-5 py-2 rounded-full hover:bg-red-600"
+              >
+                Logout
               </button>
             ) : (
               <button onClick={() => setIsModalOpen(true)}>

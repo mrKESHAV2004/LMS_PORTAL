@@ -10,7 +10,7 @@ const CoursesSection = () => {
         <p className='text-gray-500 text-sm md:text-base mt-3'>Discover our top rated courses accross various categories.From coding and design to business and wellnessour courses are crafted to deliver.</p>
         <div className='grid grid-framework px-4 md:px-0 md:my-16 my-10 gap-4'>
             {courses.slice(0,4).map((course,index)=>(
-            <CourseCard key={index} course={course}/>
+              <CourseCard key={index} course={course}/>
         ))}</div>
         <Link to='/courses' onClick={()=>scrollTo(0,0)} className='text-gray-500 border border-gray-500/30 px-10 py-3'>Show all courses</Link>
 
