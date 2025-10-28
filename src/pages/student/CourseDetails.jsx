@@ -14,14 +14,22 @@ const CourseDetails = () => {
   const [openSections,setOpenSections] = useState({})
   const [isEnrolled,setIsEnrolled] = useState(false)
   const [playerData,setPlayerData] = useState(null)
-  const {currency,courses,calculateAvgRating,calculateChapterTime,calculateCourseTime,calculateNoOfLectures} = useContext(AppContext)
-  const fetchCourseData = () =>{
-    const course = courses.find((course)=>course._id === id)
-    setCourseData(course)
+  const {user,currency,calculateAvgRating,calculateChapterTime,calculateCourseTime,calculateNoOfLectures,courseFunctions,studentFunctions} = useContext(AppContext)
+  
+
+  const getCourseData = async () =>{
+    setCourseData(await courseFunctions.getCourse(id))
   }
+  
   useEffect(()=>{
-    fetchCourseData()
-  },[courses])
+    getCourseData()    
+    if (user){
+      if (user.enrollments.includes(id)){
+        setIsEnrolled(true)
+      }
+    }
+  },[id,user])
+  
   const toggleSections = (index) => {
     setOpenSections((prev) => ({
       ...prev,
@@ -47,9 +55,9 @@ const CourseDetails = () => {
           <div className='flex'>{[...Array(5)].map((_,index)=>(
             <img key={index} src={index < Math.floor(calculateAvgRating(courseData)) ? assets.star : assets.star_blank} alt="" className='w-3.5 h-3.5' />
           ))}</div>
-          <p className='text-blue-600'>({courseData.courseRatings.length} {courseData.courseRatings.length > 1 ? 'Ratings' : 'Rating'})</p>
+          <p className='text-blue-600'>({courseData.ratings.length} {courseData.ratings.length > 1 ? 'Ratings' : 'Rating'})</p>
         
-          <p className='text-blue-600'>{courseData.enrolledStudents.length} {courseData.enrolledStudents.length > 1 ? 'Students' : 'Student'}</p>
+          <p className='text-blue-600'>{courseData.enrollments.length} {courseData.enrollments.length > 1 ? 'Students' : 'Student'}</p>
         </div>
         <p className='text-sm'>Course By <span className='text-blue-600 underline'>Greatstack</span></p>
         
@@ -57,7 +65,7 @@ const CourseDetails = () => {
         <div className='pt-8 items-center space-x-2 text-gray-800'>
           <h2 className='text-xl font-semibold'>Course Structure</h2>
           <div className='pt-5'>
-            {courseData.courseContent.map((chapter,index)=>(
+            {courseData.chapters.map((chapter,index)=>(
               <div key={index} className='border border-gray-300 bg-white mb-2 rounded'>
                 {/* Chapter header (clickable to expand/collapse) */}
                 <div className='flex items-center justify-between px-4 py-3 cursor-pointer select-none' onClick={()=>toggleSections(index)}>
@@ -115,7 +123,7 @@ const CourseDetails = () => {
           {/* Pricing */}
           <div className='flex items-center gap-3 pt-2'>
             <p className='text-gray-800 md:text-4xl text-2xl font-semibold'>{currency} {(courseData.coursePrice - (courseData.discount * courseData.coursePrice) / 100).toFixed(2)}</p>
-            <p className='md:text-lg text-gray-500 line-through'>{currency} {courseData.coursePrice.toFixed(2)}</p>
+            <p className='md:text-lg text-gray-500 line-through'>{currency} {courseData.coursePrice}</p>
             <p className='text-gray-500 md:text-lg'>{courseData.discount}% off</p>
           </div>
           
@@ -138,7 +146,7 @@ const CourseDetails = () => {
           </div>
           
           {/* Enrollment button */}
-          <button className='md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium'>{isEnrolled ? 'Already Enrolled' : 'Enroll Now'}</button>
+          <button className='md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium' onClick={()=>studentFunctions.enrollInCourse(id,user.uid)}>{isEnrolled ? 'Already Enrolled' : 'Enroll Now'}</button>
           
           {/* Course features list */}
           <div className='pt-6'>

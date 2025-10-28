@@ -13,10 +13,11 @@ const firebaseConfig = {
   storageBucket: "lms-college-44124.firebasestorage.app",
   messagingSenderId: "111715276293",
   appId: "1:111715276293:web:411ad40fd9bbd282c82e6c",
-  measurementId: "G-HEYK478F25"
+  measurementId: "G-HEYK478F25",
+  databaseURL:'https://lms-college-44124-default-rtdb.asia-southeast1.firebasedatabase.app/'
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-export default app;
+const firebaseapp = initializeApp(firebaseConfig);
+const analytics = getAnalytics(firebaseapp);
+export default firebaseapp;

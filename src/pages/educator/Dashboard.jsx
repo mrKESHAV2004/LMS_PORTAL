@@ -5,14 +5,30 @@ import Loading from '../Loading'
 import { assets } from '../../assets/assets'
 
 const Dashboard = () => {
-  const {currency} = useContext(AppContext)
+  const {currency,courseFunctions,user} = useContext(AppContext)
   const [dashboardData,setdashboardData] = useState(null)
+
   const fetchDashbordData = async () => {
-    setdashboardData(dummyDashboardData)
-  }
+    // Await the promises to resolve data
+    const [userCourses, totalEarnings, enrolledStudentsData] = await Promise.all([
+      courseFunctions.getUserCourses(user?.uid),
+      courseFunctions.calculateUserEarning(user?.uid),
+      courseFunctions.getEnrolledStudents(user?.uid)
+    ]);
+
+    const DashboardData = {
+      totalCourses: userCourses.length,
+      totalEarnings,
+      enrolledStudentsData,
+    };
+    setdashboardData(DashboardData);
+  };
+
   useEffect(() => {
-    fetchDashbordData()
-  },[])
+    fetchDashbordData();
+  // eslint-disable-next-line
+  }, []);
+
   return dashboardData ?  (
     <div className='min-h-screen flex flex-col items-start justify-between gap-8 md:p-8 md:pb-0 p-4 pt-8 pb-0'>
       <div className='space-y-5'>
@@ -55,7 +71,7 @@ const Dashboard = () => {
                   <tr key={index} className='border-b border-gray-500/20'>
                     <td className='px-4 py-3 text-center hidden sm:table-cell'>{index+1}</td>
                     <td className='md:px-4 px-2 py-3 flex items-center space-x-3'>
-                      <img src={item.student.imageUrl} className='w-10 h-10 rounded-full' alt="" />
+                      <img src={item.student?.imageUrl} className='w-9 h-9 rounded-full' alt="" />
                       <span className='truncate'>{item.student.name}</span>
                     </td>
                     <td className='px-4 py-3'>{item.courseTitle}</td>

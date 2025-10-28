@@ -1,10 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Quill from 'quill';
 import {assets} from '../../assets/assets';
+import { useContext } from 'react';
+import { AppContext } from '../../context/AppContext';
 
 const AddCourse = () => {
   const quillRef = useRef(null);
   const editorRef = useRef(null);
+  const { courseFunctions, user } = useContext(AppContext);
 
   const [courseTitle, setCourseTitle] = useState('');
   const [coursePrice, setCoursePrice] = useState(0);
@@ -102,13 +105,24 @@ const AddCourse = () => {
     }
 
     const courseData = {
+      educatorId: user.uid,
       courseTitle,
       coursePrice,
       courseDescription: quillRef.current ? quillRef.current.root.innerHTML : '',
-      image,
       discount,
-      chapters
+      chapters,
+      lectures: chapters.flatMap((chapter) =>
+        chapter.chapterContent.map((lecture) => ({
+          ...lecture,
+          chapterId: chapter.chapterId,
+          chapterTitle: chapter.chapterTitle,
+        }))
+      ),
+      ratings: [],  
+      enrollments: [],
+      createdAt: new Date(),
     };
+    courseFunctions.createCourse(courseData);
 
     console.log('Course Data:', courseData);
     alert('Course added successfully! Check console for details.');
@@ -120,7 +134,7 @@ const AddCourse = () => {
         theme: 'snow'
       });
     }
-  }, []);
+  },[]);
 
   return (
     <div className='min-h-screen bg-gray-50 overflow-auto'>

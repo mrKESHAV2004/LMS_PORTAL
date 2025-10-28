@@ -3,10 +3,10 @@ import { AppContext } from '../../context/AppContext'
 import Loading from '../Loading'
 import { useState } from 'react'
 const MyCourse = () => {
-  const {currency, courses} = useContext(AppContext)
+  const {currency, courseFunctions, user} = useContext(AppContext)
   const [educatorCourses,setEducatorCourses] = useState(null)
   const fetchEducatorCourses = async () => {
-    setEducatorCourses(courses)
+    setEducatorCourses(await courseFunctions.getUserCourses(user?.uid))
   }
   useEffect(() => {
     fetchEducatorCourses()
@@ -32,9 +32,9 @@ const MyCourse = () => {
                       <img src={course.courseThumbnail} className='w-16' alt="" />
                       <span className='truncate hidden md:block'>{course.courseTitle}</span>
                     </td>
-                    <td className='px-4 py-3'>{currency} {(course.enrolledStudents.length * (course.coursePrice - course.discount * course.coursePrice / 100)).toFixed(2)}</td>
-                    <td className='px-4 py-3 hidden md:table-cell'>{course.enrolledStudents.length || 0}</td>
-                    <td className='px-4 py-3'>{new Date(course.createdAt).toLocaleDateString()}</td>
+                    <td className='px-4 py-3'>{currency} {(course.enrollments.length * (course.coursePrice - course.discount * course.coursePrice / 100)).toFixed(2)}</td>
+                    <td className='px-4 py-3 hidden md:table-cell'>{course.enrollments.length || 0}</td>
+                    <td className='px-4 py-3'>{new Date(course.createdAt.toDate()).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>

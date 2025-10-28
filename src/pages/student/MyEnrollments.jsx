@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useContext } from 'react'
 import { AppContext } from '../../context/AppContext'
 import { useState } from 'react'
 import {Line} from 'rc-progress'
 import Footer from '../../components/student/Footer'
+import {Link} from 'react-router-dom'
+
 
 const MyEnrollments = () => {
-    const {enrolledCourses,calculateCourseTime,calculateNoOfLectures,navigate} = useContext(AppContext)
+    const {enrolledCourses,calculateCourseTime,navigate} = useContext(AppContext)
     const [progressArray,setProgressArray] = useState([
       {lectureCompleted:4,totalLectures:10},
       {lectureCompleted:0,totalLectures:10},
@@ -24,7 +26,14 @@ const MyEnrollments = () => {
     <>
       <div className='md:px-36 px-8 pt-10 '>
         <h1 className='text-2xl font-bold'>My Enrollments</h1>
-        <table className='md:table-auto w-full table-fixed overflow-hidden mt-10 border border-gray-300'>
+        {
+          enrolledCourses.length===0 ?
+          <div className='text-center text-gray-500 min-h-screen items-center justify-center flex flex-col'>
+            <p className='text-lg'>No courses enrolled yet</p>
+            <Link onClick={()=>navigate('/course-list')} className='text-blue-600 font-semibold hover:underline'>Enroll Now</Link>
+          </div>
+          :
+          <table className='md:table-auto w-full table-fixed overflow-hidden mt-10 border border-gray-300'>
           <thead className='text-gray-900 border-b border-gray-500/20 text-sm text-left max-sm:hidden'>
             <tr>
               <th className='px-4 font-semibold truncate'>Course Name</th>
@@ -46,7 +55,7 @@ const MyEnrollments = () => {
                 <td className='md:px-4 py-3 max-sm:hidden'>{calculateCourseTime(course)}</td>
                 <td className='md:px-4 py-3 max-sm:hidden'>{progressArray[enrolledCourses.indexOf(course)] && `${progressArray[enrolledCourses.indexOf(course)].lectureCompleted}/${progressArray[enrolledCourses.indexOf(course)].totalLectures}`} lectures</td>
                 <td className='md:px-4 py-3 px-2 max-sm:text-right'> 
-                  <button className='px-3 sm:px-5 py-1.5 sm:py-2 bg-blue-600 text-white rounded-md max-sm:text-sm cursor-pointer' onClick={()=>navigate(`/player/${course._id}`)}>
+                  <button className='px-3 sm:px-5 py-1.5 sm:py-2 bg-blue-600 text-white rounded-md max-sm:text-sm cursor-pointer' onClick={()=>navigate(`/player/${course.id}`)}>
                     {progressArray[enrolledCourses.indexOf(course)] && progressArray[enrolledCourses.indexOf(course)].lectureCompleted === progressArray[enrolledCourses.indexOf(course)].totalLectures ? 'Completed' :'On going'}
                   </button>
                 </td>
@@ -54,6 +63,8 @@ const MyEnrollments = () => {
             ))}
           </tbody>
         </table>
+        }
+        
     </div>
     <Footer/>
     </>

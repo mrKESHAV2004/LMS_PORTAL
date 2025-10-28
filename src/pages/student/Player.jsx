@@ -18,7 +18,7 @@ const Player = () => {
 
   const getCourseData = () =>{
     enrolledCourses.map((course)=>{
-      if(course._id === courseId){
+      if(course.id === courseId){
         setCourseData(course)
       }
     })
@@ -48,7 +48,7 @@ const Player = () => {
         <div className='text-gray-800'>
           <h2 className='text-xl font-semibold'>Course Structure</h2>
           <div className='pt-5'>
-            {courseData.courseContent && courseData.courseContent.map((chapter, chapterIndex) => (
+            {courseData.chapters && courseData.chapters.map((chapter, chapterIndex) => (
               <div key={chapter.chapterId || chapterIndex} className='border border-gray-300 bg-white mb-2 rounded'>
                 {/* Chapter header (clickable to expand/collapse) */}
                 <div className='flex items-center justify-between px-4 py-3 cursor-pointer select-none' onClick={() => toggleSections(chapterIndex)}>

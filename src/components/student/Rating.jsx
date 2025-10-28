@@ -1,11 +1,16 @@
-import { span } from 'framer-motion/client'
 import React, { useEffect, useState } from 'react'
+import { AppContext } from '../../context/AppContext'
+import { useContext } from 'react'
+import { useParams } from 'react-router-dom'
 
 const Rating = ({initialRating,onRate}) => {
+    const {user,studentFunctions} = useContext(AppContext)
+    const {courseId} = useParams()
     const [rating,setRating] = useState(initialRating || 0)
     const handleRating = (value) =>{
         setRating(value)
         if(onRate) onRate(value)
+        studentFunctions.rateCourse(user.uid,courseId,value)
     }
     useEffect(()=>{
         if(initialRating) handleRating(initialRating)

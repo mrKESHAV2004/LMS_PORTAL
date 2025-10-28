@@ -13,6 +13,7 @@ import MyCourse from './pages/educator/MyCourse.jsx'
 import StudentsEnrolled from './pages/educator/StudentsEnrolled.jsx'
 import Navbar from './components/student/Navbar.jsx'
 import { useMatch } from 'react-router-dom'
+import Profile from './pages/Profile.jsx'
 const App = () => {
   const isEducatorRoute = useMatch('/educator/*')
   return (
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/player/:courseId" element={<Player />} />
         <Route path="/my-enrollments" element={<MyEnrollments />} />
         <Route path="/loading/:path" element={<Loading />} />
+        <Route path="/me" element={<Profile />} />
         <Route path='/educator' element={<Educator />}>
           <Route path='/educator' element={<Dashboard />} />
           <Route path='add-course' element={<AddCourse />} />

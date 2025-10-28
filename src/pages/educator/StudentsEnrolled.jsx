@@ -1,17 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../context/AppContext'
-import { dummyStudentEnrolled } from '../../assets/assets'
 import Loading from '../Loading'
-import { assets } from '../../assets/assets'
 
 const StudentEnrolled = () => {
-  const {currency} = useContext(AppContext)
+  const {user,currency,courseFunctions} = useContext(AppContext)
   const [enrolledStudentsData,setEnrolledStudentsData] = useState(null)
-  const fetchStudentData = async () => {
-    setEnrolledStudentsData(dummyStudentEnrolled)
+  
+  const fetchStudentData = async (user) => {
+    setEnrolledStudentsData(await courseFunctions.getEnrolledStudents(user.uid))
   }
   useEffect(() => {
-    fetchStudentData()
+    fetchStudentData(user)
   },[])
   return enrolledStudentsData ?  (
     <div className='min-h-screen flex flex-col items-start justify-between gap-8 md:p-8 md:pb-0 p-4 pt-8 pb-0'>
@@ -22,7 +21,6 @@ const StudentEnrolled = () => {
                   <th className='px-4 py-3 font-semibold text-center hidden sm:table-cell'>#</th>
                   <th className='px-4 py-3 font-semibold'>Student Name</th>
                   <th className='px-4 py-3 font-semibold'>Course Title</th>
-                  <th className='px-4 py-3 font-semibold hidden md:table-cell'>Date</th>
                 </tr>
               </thead>
               <tbody className='text-gray-500 text-sm'>
@@ -30,11 +28,10 @@ const StudentEnrolled = () => {
                   <tr key={index} className='border-b border-gray-500/20'>
                     <td className='px-4 py-3 text-center hidden sm:table-cell'>{index+1}</td>
                     <td className='md:px-4 px-2 py-3 flex items-center space-x-3'>
-                      <img src={item.student.imageUrl} className='w-9 h-9 rounded-full' alt="" />
+                      <img src={item.student?.imageUrl} className='w-9 h-9 rounded-full' alt="" />
                       <span className='truncate'>{item.student.name}</span>
                     </td>
                     <td className='px-4 py-3'>{item.courseTitle}</td>
-                    <td className='px-4 py-3 hidden md:table-cell'>{new Date(item.purchaseDate).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>
