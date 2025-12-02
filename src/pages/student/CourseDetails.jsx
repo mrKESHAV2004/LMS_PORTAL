@@ -16,7 +16,36 @@ const CourseDetails = () => {
   const [playerData,setPlayerData] = useState(null)
   const {user,currency,calculateAvgRating,calculateChapterTime,calculateCourseTime,calculateNoOfLectures,courseFunctions,studentFunctions} = useContext(AppContext)
   
+  function extractYoutubeId(url) {
+    if (!url) return ''
 
+    // If it's already a YouTube video ID, just return it
+    const idRegex = /^[a-zA-Z0-9_-]{8,15}$/
+    if (!url.includes('/') && idRegex.test(url)) {
+      return url
+    }
+
+    try {
+      const hasProtocol = /^https?:\/\//i.test(url)
+      const u = new URL(hasProtocol ? url : `https://${url}`)
+
+      // Short youtu.be links
+      if (u.hostname.includes('youtu.be')) {
+        return u.pathname.slice(1)
+      }
+
+      // Standard youtube.com/watch?v=... links
+      const vParam = u.searchParams.get('v')
+      if (vParam) return vParam
+
+      // Fallback: try to take the last path segment as ID
+      const parts = u.pathname.split('/').filter(Boolean)
+      return parts[parts.length - 1] || ''
+    } catch {
+      // On any parsing error, return empty string instead of throwing
+      return ''
+    }
+  }
   const getCourseData = async () =>{
     setCourseData(await courseFunctions.getCourse(id))
   }
@@ -84,7 +113,7 @@ const CourseDetails = () => {
                       <div className='flex items-start justify-between w-full text-gray-800 md:text-default'>
                         <p>{lecture.lectureTitle}</p>
                         <div className='flex gap-2'>
-                          {lecture.isPreviewFree && <p onClick={()=>setPlayerData({videoId:lecture.lectureUrl.split('/').pop()})} className='text-blue-600'>Preview</p>}
+                          {lecture.isPreviewFree && <p onClick={()=>setPlayerData(lecture)} className='text-blue-600'>Preview</p>}
                           <p>{humanizeDuration(lecture.lectureDuration*60000,{units:['h','m'],round:true})}</p>
                         </div>
                       </div>
@@ -108,7 +137,7 @@ const CourseDetails = () => {
       <div className='max-w-2xl z-10 shadow-[0px_4px_15px_2px_rgba(0,0,0,0.1)] rounded-t md:rounded-none overflow-hidden bg-white min-w-[300px] sm:max-w-[420px]'>
         {
               playerData ? 
-              <YouTube videoId={playerData.videoId} opts={{playerVars:{autoplay:1,rel:0}}} iframeClassName='w-full aspect-video' />
+              <YouTube videoId={extractYoutubeId(playerData.lectureUrl)} opts={{playerVars:{autoplay:1,rel:0}}} iframeClassName='w-full aspect-video' />
               :
               <img src={courseData.courseThumbnail} alt="" />
             }

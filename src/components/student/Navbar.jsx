@@ -88,13 +88,7 @@ const AuthModal = memo(({ isOpen, onClose, onAuthSuccess }) => {
           <h2 className="text-2xl font-bold text-gray-800">
             {isSignUp ? "Create Account" : "Welcome Back"}
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition text-2xl"
-            aria-label="Close"
-          >
-            ×
-          </button>
+          <button  onClick={onClose}  className="text-gray-400 hover:text-gray-600 transition text-2xl"  aria-label="Close">  ×</button>
         </div>
 
         {/* Error Alert */}
@@ -287,11 +281,13 @@ const Navbar = () => {
 
         <div className='md:hidden flex items-center gap-2 sm:gap-5 text-gray-500'>
           <div className='flex items-center gap-5 '>
-            {
+             {
               user &&
               <>
-                <button onClick={()=>navigate('/educator')}>{isEducator ? 'Educator Dashboard' : 'Become Educator'}</button>
+              {isEducator ? 
+                <button onClick={()=>navigate('/educator')}>Educator Dashboard</button> : 
                 <Link to="/my-enrollments" className='text-sm'>My Enrollments</Link>
+              }
               </>
             }
             {user ? (

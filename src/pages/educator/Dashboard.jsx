@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../context/AppContext'
-import { dummyDashboardData } from '../../assets/assets'
 import Loading from '../Loading'
 import { assets } from '../../assets/assets'
 
@@ -9,25 +8,35 @@ const Dashboard = () => {
   const [dashboardData,setdashboardData] = useState(null)
 
   const fetchDashbordData = async () => {
-    // Await the promises to resolve data
-    const [userCourses, totalEarnings, enrolledStudentsData] = await Promise.all([
-      courseFunctions.getUserCourses(user?.uid),
-      courseFunctions.calculateUserEarning(user?.uid),
-      courseFunctions.getEnrolledStudents(user?.uid)
-    ]);
-
-    const DashboardData = {
-      totalCourses: userCourses.length,
-      totalEarnings,
-      enrolledStudentsData,
-    };
-    setdashboardData(DashboardData);
+    if (!user?.uid) return;
+  
+    try {
+      console.log('Fetching dashboard data for', user.uid);
+  
+      const [userCourses, totalEarnings, enrolledStudentsData] = await Promise.all([
+        courseFunctions.getUserCourses(user.uid),
+        courseFunctions.calculateUserEarning(user.uid),
+        courseFunctions.getEnrolledStudents(user.uid),
+      ]);
+  
+      const DashboardData = {
+        totalCourses: userCourses.length,
+        totalEarnings,
+        enrolledStudentsData,
+      };
+      setdashboardData(DashboardData);
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+    }
   };
+  
 
   useEffect(() => {
-    fetchDashbordData();
-  // eslint-disable-next-line
-  }, []);
+    // Only fetch once a logged-in user is available
+    if (user?.uid) {
+      fetchDashbordData();
+    }
+  }, [user]);
 
   return dashboardData ?  (
     <div className='min-h-screen flex flex-col items-start justify-between gap-8 md:p-8 md:pb-0 p-4 pt-8 pb-0'>

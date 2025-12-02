@@ -15,7 +15,15 @@ const Player = () => {
   const [courseData, setCourseData] = useState(null)
   const [openSections, setOpenSections] = useState({})
   const [playerData, setPlayerData] = useState(null)
-
+  function extractYoutubeId(url) {
+    const u = new URL(url);
+  
+    if (u.hostname.includes('youtu.be')) {
+      return u.pathname.slice(1);
+    }
+  
+    return u.searchParams.get("v");
+  }
   const getCourseData = () =>{
     enrolledCourses.map((course)=>{
       if(course.id === courseId){
@@ -100,7 +108,7 @@ const Player = () => {
         <div className='md:mt-10'>
           {playerData ? (
             <div>
-              <YouTube videoId={playerData.lectureUrl.split('/').pop()} iframeClassName='w-full aspect-video' />
+              <YouTube  videoId={extractYoutubeId(playerData.lectureUrl)}  iframeClassName="w-full aspect-video"/>
               <div className='flex justify-between items-center mt-1'>
                 <p>{playerData.chapter} . {playerData.lecture} . {playerData.lectureTitle}</p>
                 <button className='text-blue-600'>{false ? 'Completed' : 'Mark Complete'}</button>

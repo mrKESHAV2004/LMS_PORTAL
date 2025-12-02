@@ -1,6 +1,6 @@
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc, query, where } from 'firebase/firestore';
+//  
 import firebaseapp from './firebase';
-import { where } from 'firebase/firestore';
 
 const firestore = getFirestore(firebaseapp)
 
@@ -26,10 +26,15 @@ const getCourse = async (id) => {
 }
 
 const getUserCourses = async (userId) => {
-    const querySnapshot = await getDocs(collection(firestore, "courses"), where("educatorId", "==", userId));
+    const q = query(
+      collection(firestore, "courses"),
+      where("educatorId", "==", userId)
+    );
+  
+    const querySnapshot = await getDocs(q);
     const courses = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     return courses;
-}
+  };
 
 const getEnrolledStudents = async (userId) => {
     const courseData = await getUserCourses(userId);
@@ -48,6 +53,7 @@ const getEnrolledStudents = async (userId) => {
             // Fetch student name from the students collection
             const studentDocRef = doc(firestore, "users", studentId);
             const studentSnap = await getDoc(studentDocRef);
+
             let studentData = null;
             if (studentSnap.exists()) {
                 studentData = studentSnap.data();
@@ -56,7 +62,6 @@ const getEnrolledStudents = async (userId) => {
                 student: {
                     id: studentId,
                     name: studentData.email,
-                    imageUrl: studentData && studentData.imageUrl ? studentData.imageUrl : null,
                 },
                 courseTitle: course.courseTitle,
             });
