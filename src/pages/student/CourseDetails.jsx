@@ -8,7 +8,7 @@ import humanizeDuration from 'humanize-duration'
 import Footer from '../../components/student/Footer'
 import YouTube from 'react-youtube'
 
-const CourseDetails = () => {
+function CourseDetails() {
   const {id} = useParams()
   const [courseData,setCourseData] = useState(null)
   const [openSections,setOpenSections] = useState({})
@@ -50,15 +50,16 @@ const CourseDetails = () => {
     setCourseData(await courseFunctions.getCourse(id))
   }
   
-  useEffect(()=>{
-    getCourseData()    
-    if (user){
-      if (courseData.enrollments.includes(user.id)){
-        setIsEnrolled(true)
-      }
-    }
-  },[id,user])
-  
+  // Fetch course data when the course id changes
+  useEffect(() => {
+    getCourseData();
+  }, [id]);
+
+  // Derive enrollment status when user/course data changes
+  useEffect(() => {
+    const enrolled = !!(user && courseData?.enrollments?.includes(user.uid));
+    setIsEnrolled(enrolled);
+  }, [user, courseData]);
   const toggleSections = (index) => {
     setOpenSections((prev) => ({
       ...prev,
@@ -175,7 +176,22 @@ const CourseDetails = () => {
           </div>
           
           {/* Enrollment button */}
-          <button className='md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium' onClick={()=>studentFunctions.enrollInCourse(id,user.uid)}>{isEnrolled ? 'Already Enrolled' : 'Enroll Now'}</button>
+          <button
+            className='md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium'
+            onClick={async () => {
+              if (!user || isEnrolled) return;
+              await studentFunctions.enrollInCourse(id, user.uid);
+              setIsEnrolled(true);
+              setCourseData(prev => ({
+                ...prev,
+                enrollments: Array.isArray(prev?.enrollments)
+                  ? [...prev.enrollments, user.uid]
+                  : [user.uid]
+              }));
+            }}
+          >
+            {isEnrolled ? 'Already Enrolled' : 'Enroll Now'}
+          </button>
           
           {/* Course features list */}
           <div className='pt-6'>
