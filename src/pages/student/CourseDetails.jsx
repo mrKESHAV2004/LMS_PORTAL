@@ -53,7 +53,7 @@ const CourseDetails = () => {
   useEffect(()=>{
     getCourseData()    
     if (user){
-      if (user.enrollments.includes(id)){
+      if (courseData.enrollments.includes(user.id)){
         setIsEnrolled(true)
       }
     }
