@@ -24,11 +24,11 @@ const MyEnrollments = () => {
     ])
   return (
     <>
-      <div className='md:px-36 px-8 pt-10 '>
+      <div className='md:px-36 px-8 pt-10 min-h-screen'>
         <h1 className='text-2xl font-bold'>My Enrollments</h1>
         {
           enrolledCourses.length===0 ?
-          <div className='text-center text-gray-500 min-h-screen items-center justify-center flex flex-col'>
+          <div className='text-center text-gray-500 items-center justify-center flex flex-col'>
             <p className='text-lg'>No courses enrolled yet</p>
             <Link onClick={()=>navigate('/course-list')} className='text-blue-600 font-semibold hover:underline'>Enroll Now</Link>
           </div>
